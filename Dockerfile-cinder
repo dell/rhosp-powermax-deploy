@@ -2,7 +2,7 @@
 # Using openstack-cinder-volume base image
 # Version 1.0.1
 
-FROM registry.access.redhat.com/dellemc/openstack-cinder-volume-pmax-rhosp16
+FROM registry.redhat.io/rhosp-rhel8/openstack-cinder-volume:16.2
 
 MAINTAINER Dell EMC
 LABEL description="Red Hat OpenStack Platform 16.2 cinder-volume Dell EMC PowerMax" \
@@ -12,10 +12,8 @@ LABEL description="Red Hat OpenStack Platform 16.2 cinder-volume Dell EMC PowerM
       version="1.0.1"
 
 USER root
-
-COPY opt /opt
-RUN chmod -R 0700 /opt/emc/powermax
-
 COPY LICENSE /licenses/licensing.txt
+COPY cinder/volume/drivers/dell_emc/powermax /usr/lib/python3.6/site-packages/cinder/volume/drivers/dell_emc/powermax
+RUN python3 -mcompileall /usr/lib/python3.6/site-packages/cinder/volume/drivers/dell_emc/powermax
 
 USER cinder
