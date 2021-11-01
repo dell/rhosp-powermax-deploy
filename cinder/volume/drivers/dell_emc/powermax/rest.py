@@ -2033,7 +2033,7 @@ class PowerMaxRest(object):
     def modify_volume_snap(self, array, source_id, target_id, snap_name,
                            extra_specs, link=False, unlink=False,
                            rename=False, new_snap_name=None, restore=False,
-                           list_volume_pairs=None, generation=0, copy=False):
+                           list_volume_pairs=None, generation="0", copy=False):
         """Modify a snapvx snapshot
 
         :param array: the array serial number
@@ -2050,6 +2050,7 @@ class PowerMaxRest(object):
         :param generation: the generation number of the snapshot
         :param copy: If copy mode should be used for SnapVX target links
         """
+        generation = self.utils.convert_to_string(generation)
         action, operation, payload = '', '', {}
         copy = 'true' if copy else 'false'
 
@@ -2099,7 +2100,7 @@ class PowerMaxRest(object):
             self.wait_for_job(operation, status_code, job, extra_specs)
 
     def delete_volume_snap(self, array, snap_name,
-                           source_device_ids, restored=False, generation=0):
+                           source_device_ids, restored=False, generation="0"):
         """Delete the snapshot of a volume or volumes.
 
         :param array: the array serial number
@@ -2108,13 +2109,14 @@ class PowerMaxRest(object):
         :param restored: Flag to indicate terminate restore session
         :param generation: the generation number of the snapshot
         """
+        generation = self.utils.convert_to_string(generation)
         device_list = []
         if not isinstance(source_device_ids, list):
             source_device_ids = [source_device_ids]
         for dev in source_device_ids:
             device_list.append({"name": dev})
         payload = {"deviceNameListSource": device_list,
-                   "generation": int(generation)}
+                   "generation": generation}
         if restored:
             payload.update({"restore": True})
         LOG.debug("The payload is %(payload)s.",
@@ -2135,7 +2137,7 @@ class PowerMaxRest(object):
         return self.get_resource(array, REPLICATION, 'volume',
                                  resource_name, private='/private')
 
-    def get_volume_snap(self, array, device_id, snap_name, generation=0):
+    def get_volume_snap(self, array, device_id, snap_name, generation="0"):
         """Given a volume snap info, retrieve the snapVx object.
 
         :param array: the array serial number
@@ -2145,6 +2147,7 @@ class PowerMaxRest(object):
         :returns: snapshot dict, or None
         """
         snapshot = None
+        generation = self.utils.convert_to_string(generation)
         snap_info = self.get_volume_snap_info(array, device_id)
         if snap_info:
             if (snap_info.get('snapshotSrcs', None) and
@@ -2257,7 +2260,7 @@ class PowerMaxRest(object):
         return defined
 
     def get_sync_session(self, array, source_device_id, snap_name,
-                         target_device_id, generation=0):
+                         target_device_id, generation="0"):
         """Get a particular sync session.
 
         :param array: the array serial number
@@ -2268,6 +2271,7 @@ class PowerMaxRest(object):
         :returns: sync session -- dict, or None
         """
         session = None
+        generation = self.utils.convert_to_string(generation)
         linked_device_list = self.get_snap_linked_device_list(
             array, source_device_id, snap_name, generation)
         for target in linked_device_list:
@@ -2297,7 +2301,7 @@ class PowerMaxRest(object):
         return snap_dict_list
 
     def get_snap_linked_device_list(self, array, source_device_id,
-                                    snap_name, generation=0, state=None):
+                                    snap_name, generation="0", state=None):
         """Get the list of linked devices for a particular snapVx snapshot.
 
         :param array: the array serial number
@@ -2309,6 +2313,7 @@ class PowerMaxRest(object):
         """
         snap_dict_list = None
         linked_device_list = []
+        generation = self.utils.convert_to_string(generation)
         snap_dict_list = self._get_snap_linked_device_dict_list(
             array, source_device_id, snap_name, state=state)
         for snap_dict in snap_dict_list:
