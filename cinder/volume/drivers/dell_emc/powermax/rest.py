@@ -2146,18 +2146,17 @@ class PowerMaxRest(object):
         :param generation: the generation number of the snapshot
         :returns: snapshot dict, or None
         """
-        snapshot = None
-        generation = self.utils.convert_to_string(generation)
         snap_info = self.get_volume_snap_info(array, device_id)
         if snap_info:
             if (snap_info.get('snapshotSrcs', None) and
-                    bool(snap_info['snapshotSrcs'])):
-                for snap in snap_info['snapshotSrcs']:
-                    if snap['snapshotName'] == snap_name:
-                        if snap['generation'] == generation:
-                            snapshot = snap
-                            break
-        return snapshot
+                    bool(snap_info.get('snapshotSrcs'))):
+                for snap in snap_info.get('snapshotSrcs'):
+                    if snap.get('snapshotName') == snap_name:
+                        snapshot = self.utils.verify_snap_using_gen(
+                            snap, generation)
+                        if snapshot:
+                            return snapshot
+        return None
 
     def get_volume_snapshot_list(self, array, source_device_id):
         """Get a list of snapshot details for a particular volume.
@@ -2311,16 +2310,16 @@ class PowerMaxRest(object):
         :param state: filter for state of the link
         :returns: linked_device_list or empty list
         """
-        snap_dict_list = None
-        linked_device_list = []
         generation = self.utils.convert_to_string(generation)
         snap_dict_list = self._get_snap_linked_device_dict_list(
             array, source_device_id, snap_name, state=state)
         for snap_dict in snap_dict_list:
-            if generation == snap_dict['generation']:
-                linked_device_list = snap_dict['linked_vols']
+            snap = self.utils.verify_snap_using_gen(
+                snap_dict, generation)
+            if snap:
+                return snap['linked_vols']
                 break
-        return linked_device_list
+        return []
 
     def _get_snap_linked_device_dict_list(
             self, array, source_device_id, snap_name, state=None):
