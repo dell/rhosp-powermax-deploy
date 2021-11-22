@@ -889,7 +889,7 @@ class PowerMaxData(object):
     # replication
     volume_snap_vx = {'snapshotLnks': [],
                       'snapshotSrcs': [
-                          {'generation': '0',
+                          {'generation': 0,
                            'linkedDevices': [
                                {'targetDevice': device_id2,
                                 'percentageCopied': 100,
@@ -899,6 +899,49 @@ class PowerMaxData(object):
                                 'linked': True}],
                            'snapshotName': test_snapshot_snap_name,
                            'state': 'Established'}]}
+
+    volume_snap_vx_gen_0_str = (
+        {'snapshotLnks': [],
+         'snapshotSrcs': [
+             {'generation': '0',
+              'linkedDevices': [
+                  {'targetDevice': device_id2,
+                   'percentageCopied': 100,
+                   'state': 'Copied',
+                   'copy': True,
+                   'defined': True,
+                   'linked': True}],
+              'snapshotName': test_snapshot_snap_name,
+              'state': 'Established'}]})
+
+    volume_snap_vx_gen_1 = (
+        {'snapshotLnks': [],
+         'snapshotSrcs': [
+             {'generation': 1,
+              'linkedDevices': [
+                  {'targetDevice': device_id2,
+                   'percentageCopied': 100,
+                   'state': 'Copied',
+                   'copy': True,
+                   'defined': True,
+                   'linked': True}],
+              'snapshotName': test_snapshot_snap_name,
+              'state': 'Established'}]})
+
+    volume_snap_vx_gen_1_str = (
+        {'snapshotLnks': [],
+         'snapshotSrcs': [
+             {'generation': '1',
+              'linkedDevices': [
+                  {'targetDevice': device_id2,
+                   'percentageCopied': 100,
+                   'state': 'Copied',
+                   'copy': True,
+                   'defined': True,
+                   'linked': True}],
+              'snapshotName': test_snapshot_snap_name,
+              'state': 'Established'}]})
+
     capabilities = {'symmetrixCapability': [{'rdfCapable': True,
                                              'snapVxCapable': True,
                                              'symmetrixId': '0001111111'},

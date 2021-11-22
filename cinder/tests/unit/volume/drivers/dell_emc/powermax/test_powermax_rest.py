@@ -1342,6 +1342,59 @@ class PowerMaxRestTest(test.TestCase):
             snap = self.rest.get_volume_snap(array, device_id, snap_name)
             self.assertIsNone(snap)
 
+    def test_get_volume_snap_gen_0(self):
+        array = self.data.array
+        snap_name = self.data.volume_snap_vx['snapshotSrcs'][0]['snapshotName']
+        device_id = self.data.device_id
+        ref_snap = self.data.volume_snap_vx['snapshotSrcs'][0]
+        snap = self.rest.get_volume_snap(array, device_id, snap_name, 0)
+        self.assertEqual(ref_snap, snap)
+        snap = self.rest.get_volume_snap(array, device_id, snap_name, '0')
+        self.assertEqual(ref_snap, snap)
+
+    def test_get_volume_snap_gen_1(self):
+        array = self.data.array
+        snap_name = (
+            self.data.volume_snap_vx_gen_1['snapshotSrcs'][0]['snapshotName'])
+        device_id = self.data.device_id
+        ref_snap = self.data.volume_snap_vx_gen_1['snapshotSrcs'][0]
+        with mock.patch.object(self.rest, 'get_volume_snap_info',
+                               return_value=self.data.volume_snap_vx_gen_1):
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, 1)
+            self.assertEqual(ref_snap, snap)
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, '1')
+            self.assertEqual(ref_snap, snap)
+
+    def test_get_volume_snap_gen_str_0(self):
+        array = self.data.array
+        snap_name = (
+            self.data.volume_snap_vx_gen_0_str[
+                'snapshotSrcs'][0]['snapshotName'])
+        device_id = self.data.device_id
+        ref_snap = self.data.volume_snap_vx_gen_0_str['snapshotSrcs'][0]
+        with mock.patch.object(
+                self.rest, 'get_volume_snap_info',
+                return_value=self.data.volume_snap_vx_gen_0_str):
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, 0)
+            self.assertEqual(ref_snap, snap)
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, '0')
+            self.assertEqual(ref_snap, snap)
+
+    def test_get_volume_snap_gen_str_1(self):
+        array = self.data.array
+        snap_name = (
+            self.data.volume_snap_vx_gen_1_str[
+                'snapshotSrcs'][0]['snapshotName'])
+        device_id = self.data.device_id
+        ref_snap = self.data.volume_snap_vx_gen_1_str['snapshotSrcs'][0]
+        with mock.patch.object(
+                self.rest, 'get_volume_snap_info',
+                return_value=self.data.volume_snap_vx_gen_1_str):
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, 1)
+            self.assertEqual(ref_snap, snap)
+            snap = self.rest.get_volume_snap(array, device_id, snap_name, '1')
+            self.assertEqual(ref_snap, snap)
+
     def test_get_snap_linked_device_dict_list(self):
         array = self.data.array
         snap_name = 'temp-snapshot'
@@ -1399,7 +1452,8 @@ class PowerMaxRestTest(test.TestCase):
     def test_find_snap_vx_sessions_tgt_only(self, mck_snap, mck_vol):
         array = self.data.array
         source_id = self.data.device_id
-        ref_session = {'generation': '6', 'state': 'Linked', 'copy_mode': False,
+        ref_session = {'generation': '6', 'state': 'Linked',
+                       'copy_mode': False,
                        'snap_name': 'temp-000AA-snapshot_for_clone',
                        'source_vol_id': self.data.device_id2,
                        'target_vol_id': source_id, 'expired': True}

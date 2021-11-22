@@ -1993,3 +1993,20 @@ class PowerMaxUtils(object):
         :returns: str
         """
         return in_value if isinstance(in_value, str) else str(in_value)
+
+    def verify_snap_using_gen(self, snap_vx, gen):
+        """Check if snap has the correct generation number
+
+        This also allows for the generation to be brought
+        back as an int without Python treating 0 as a False
+
+        :param snap_vx: the snapVX object
+        :param gen: the generation number
+        :returns: snap_vx or None
+        """
+        snap_gen = snap_vx.get('generation')
+        snap_gen = self.convert_to_string(snap_gen)
+        if snap_gen and snap_gen.isdigit():
+            if int(snap_gen) == int(gen):
+                return snap_vx
+        return None
