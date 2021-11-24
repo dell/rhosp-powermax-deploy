@@ -2010,3 +2010,15 @@ class PowerMaxUtils(object):
             if int(snap_gen) == int(gen):
                 return snap_vx
         return None
+
+    @staticmethod
+    def check_uuid_regex(volume_id):
+        """Check the uuid regex
+
+        :param volume_id: the unique volume identifier
+        :returns: bool
+        """
+        uuid_regex = (re.compile(
+            r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
+            re.I))
+        return uuid_regex.search(volume_id)

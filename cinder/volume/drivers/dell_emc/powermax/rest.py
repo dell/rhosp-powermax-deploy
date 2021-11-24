@@ -2033,7 +2033,7 @@ class PowerMaxRest(object):
     def modify_volume_snap(self, array, source_id, target_id, snap_name,
                            extra_specs, link=False, unlink=False,
                            rename=False, new_snap_name=None, restore=False,
-                           list_volume_pairs=None, generation="0", copy=False):
+                           list_volume_pairs=None, generation='0', copy=False):
         """Modify a snapvx snapshot
 
         :param array: the array serial number
@@ -2069,7 +2069,8 @@ class PowerMaxRest(object):
             payload = {"deviceNameListSource": [{"name": source_id}],
                        "deviceNameListTarget": [{"name": source_id}],
                        "action": action,
-                       "star": 'false', "force": 'false'}
+                       "star": 'false', "force": 'false',
+                       "generation": generation}
         elif action in ('Link', 'Unlink'):
             operation = 'Modify snapVx relationship to target'
             src_list, tgt_list = [], []
@@ -2091,7 +2092,8 @@ class PowerMaxRest(object):
             operation = 'Rename snapVx snapshot'
             payload = {"deviceNameListSource": [{"name": source_id}],
                        "deviceNameListTarget": [{"name": source_id}],
-                       "action": action, "newsnapshotname": new_snap_name}
+                       "action": action, "newsnapshotname": new_snap_name,
+                       "generation": generation}
 
         if action:
             status_code, job = self.modify_resource(
@@ -2137,7 +2139,7 @@ class PowerMaxRest(object):
         return self.get_resource(array, REPLICATION, 'volume',
                                  resource_name, private='/private')
 
-    def get_volume_snap(self, array, device_id, snap_name, generation="0"):
+    def get_volume_snap(self, array, device_id, snap_name, generation='0'):
         """Given a volume snap info, retrieve the snapVx object.
 
         :param array: the array serial number
@@ -2157,6 +2159,24 @@ class PowerMaxRest(object):
                         if snapshot:
                             return snapshot
         return None
+
+    def get_volume_snaps(self, array, device_id, snap_name):
+        """Given a volume snap info, retrieve the snapVx object.
+
+        :param array: the array serial number
+        :param device_id: the source volume device id
+        :param snap_name: the name of the snapshot
+        :returns: snapshot dict, or None
+        """
+        snapshots = list()
+        snap_info = self.get_volume_snap_info(array, device_id)
+        if snap_info:
+            if (snap_info.get('snapshotSrcs', None) and
+                    bool(snap_info['snapshotSrcs'])):
+                for snap in snap_info['snapshotSrcs']:
+                    if snap['snapshotName'] == snap_name:
+                        snapshots.append(snap)
+        return snapshots
 
     def get_volume_snapshot_list(self, array, source_device_id):
         """Get a list of snapshot details for a particular volume.
