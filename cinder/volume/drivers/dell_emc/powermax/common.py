@@ -3308,7 +3308,7 @@ class PowerMaxCommon(object):
 
         try:
             if snap_backend_name is None:
-                raise
+                raise Exception('Unable to get snap name.')
             self.rest.modify_volume_snap(
                 array, device_id, device_id, snap_name,
                 extra_specs, rename=True, new_snap_name=snap_backend_name)
