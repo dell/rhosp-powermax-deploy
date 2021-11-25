@@ -1,6 +1,6 @@
 # Cinder driver container for Dell EMC PowerMax
 # Using openstack-cinder-volume base image
-# Version 1.0.2
+# Version 1.0.3
 
 FROM registry.redhat.io/rhosp-rhel8/openstack-cinder-volume:16.2
 
@@ -9,7 +9,7 @@ LABEL description="Red Hat OpenStack Platform 16.2 cinder-volume Dell EMC PowerM
       summary="Red Hat OpenStack Platform 16.2 cinder-volume Dell EMC PowerMax" \
       name="dellemc/openstack-cinder-volume-pmax-rhosp16" \
       vendor="Dell EMC" \
-      version="1.0.2"
+      version="1.0.3"
 
 USER root
 COPY LICENSE /licenses/licensing.txt
