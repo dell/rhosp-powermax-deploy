@@ -1235,7 +1235,8 @@ class PowerMaxRestTest(test.TestCase):
         payload_restore = {'deviceNameListSource': [{'name': source_id}],
                            'deviceNameListTarget': [{'name': source_id}],
                            'action': 'Restore',
-                           'star': 'false', 'force': 'false'}
+                           'star': 'false', 'force': 'false',
+                           'generation': '0'}
         with mock.patch.object(
                 self.rest, 'modify_resource',
                 return_value=(202, self.data.job_list[0])) as mock_modify:
