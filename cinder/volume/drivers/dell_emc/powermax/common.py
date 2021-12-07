@@ -3292,11 +3292,11 @@ class PowerMaxCommon(object):
                 array, device_id, snap_name)
             if new_snap_name is None:
                 exception_message = (
-                    _("Snapshot %(snap_name)s is not associated with "
-                      "specified volume %(device_id)s, it is not possible "
-                      "to manage a snapshot that is not associated with the "
-                      "specified volume.")
-                    % {'device_id': device_id, 'snap_name': snap_name})
+                        _("Snapshot %(snap_name)s is not associated with specified "
+                          "volume %(device_id)s, it is not possible to manage a "
+                          "snapshot that is not associated with the specified "
+                          "volume.")
+                        % {'device_id': device_id, 'snap_name': snap_name})
                 LOG.error(exception_message)
                 raise exception.VolumeBackendAPIException(
                     message=exception_message)
