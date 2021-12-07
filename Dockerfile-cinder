@@ -15,6 +15,5 @@ USER root
 COPY LICENSE /licenses/licensing.txt
 COPY cinder/volume/drivers/dell_emc/powermax /usr/lib/python3.6/site-packages/cinder/volume/drivers/dell_emc/powermax
 RUN python3 -mcompileall /usr/lib/python3.6/site-packages/cinder/volume/drivers/dell_emc/powermax
-RUN yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical
 
 USER cinder
