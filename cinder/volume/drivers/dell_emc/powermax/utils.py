@@ -2022,3 +2022,14 @@ class PowerMaxUtils(object):
             r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
             re.I))
         return uuid_regex.search(volume_id)
+
+    @staticmethod
+    def get_array_from_host(volume):
+        """Get the array from the host string
+
+        :param volume: volume object
+        :returns: array -- str
+        """
+        host = volume.host
+        host_list = host.split('+')
+        return host_list[-1]
